@@ -1,3 +1,4 @@
+// app/src/main/java/com/example/carnet/MainActivity.kt
 package com.example.carnet
 
 import android.os.Bundle

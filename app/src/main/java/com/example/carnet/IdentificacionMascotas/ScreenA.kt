@@ -1,4 +1,3 @@
-// app/src/main/java/com/example/carnet/IdentificacionMascotas/ScreenA.kt
 package com.example.carnet.IdentificacionMascotas
 
 import androidx.compose.foundation.background
@@ -13,22 +12,49 @@ import androidx.compose.material.icons.filled.Photo
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenA(
-    onRegister: (name: String, breed: String, size: String, age: Int, photoUrl: String) -> Unit
+fun RegistroMascota(
+    nombreInicial: String,
+    razaInicial: String,
+    tamañoInicial: String,
+    edadInicial: Int,
+    sexoInicial: String,
+    urlInicial: String,
+    indiceInicial: Int,
+    onRegistrar: (
+        nombre: String,
+        raza: String,
+        tamaño: String,
+        edad: Int,
+        sexo: String,
+        urlFoto: String,
+        indice: Int
+    ) -> Unit
 ) {
+    var nombre by rememberSaveable { mutableStateOf(nombreInicial) }
+    var raza   by rememberSaveable { mutableStateOf(razaInicial) }
+    var tamaño by rememberSaveable { mutableStateOf(tamañoInicial) }
+    var edadTxt  by rememberSaveable { mutableStateOf(edadInicial.toString()) }
+    var sexo   by rememberSaveable { mutableStateOf(sexoInicial) }
+    var urlFoto by rememberSaveable { mutableStateOf(urlInicial) }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Registro Mascota", color = Color.White) },
+                title = {
+                    Text(
+                        if (indiceInicial < 0) "Registrar mascota"
+                        else "Editar mascota",
+                        color = Color.White
+                    )
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.Transparent
+                    containerColor = Color(0xFF00796B)
                 )
             )
         },
@@ -39,76 +65,72 @@ fun ScreenA(
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        0.0f to Color(0xFF00BFA6),
-                        1.0f to Color(0xFF00E5FF),
-                        startY = 0f,
-                        endY = Float.POSITIVE_INFINITY
+                        listOf(Color(0xFFE0F2F1), Color(0xFFB2DFDB))
                     )
                 )
                 .padding(padding)
         ) {
             Column(
                 Modifier
+                    .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(24.dp),
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Card(
                     Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.85f)),
-                    elevation = CardDefaults.cardElevation(8.dp)
+                    elevation = CardDefaults.cardElevation(8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.9f))
                 ) {
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        var name     by rememberSaveable { mutableStateOf("") }
-                        var breed    by rememberSaveable { mutableStateOf("") }
-                        var sizeText by rememberSaveable { mutableStateOf("") }
-                        var ageText  by rememberSaveable { mutableStateOf("") }
-                        var photoUrl by rememberSaveable { mutableStateOf("") }
-
                         OutlinedTextField(
-                            value = name,
-                            onValueChange = { name = it },
+                            value = nombre,
+                            onValueChange = { nombre = it },
                             label = { Text("Nombre") },
-                            leadingIcon = { Icon(Icons.Filled.Pets, contentDescription = null) },
+                            leadingIcon = { Icon(Icons.Filled.Pets, contentDescription = null, tint = Color(0xFF00796B)) },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp)
                         )
-
                         OutlinedTextField(
-                            value = breed,
-                            onValueChange = { breed = it },
+                            value = raza,
+                            onValueChange = { raza = it },
                             label = { Text("Raza") },
-                            leadingIcon = { Icon(Icons.Filled.Pets, contentDescription = null) },
+                            leadingIcon = { Icon(Icons.Filled.Pets, contentDescription = null, tint = Color(0xFF00796B)) },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp)
                         )
-
                         OutlinedTextField(
-                            value = sizeText,
-                            onValueChange = { sizeText = it },
+                            value = tamaño,
+                            onValueChange = { tamaño = it },
                             label = { Text("Tamaño") },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp)
                         )
-
                         OutlinedTextField(
-                            value = ageText,
-                            onValueChange = { ageText = it },
-                            label = { Text("Edad") },
+                            value = edadTxt,
+                            onValueChange = { edadTxt = it },
+                            label = { Text("Edad (años)") },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp)
                         )
-
                         OutlinedTextField(
-                            value = photoUrl,
-                            onValueChange = { photoUrl = it },
-                            label = { Text("URL de Foto") },
-                            leadingIcon = { Icon(Icons.Filled.Photo, contentDescription = null) },
+                            value = sexo,
+                            onValueChange = { sexo = it },
+                            label = { Text("Sexo") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        OutlinedTextField(
+                            value = urlFoto,
+                            onValueChange = { urlFoto = it },
+                            label = { Text("URL de foto") },
+                            leadingIcon = { Icon(Icons.Filled.Photo, contentDescription = null, tint = Color(0xFF00796B)) },
                             singleLine = true,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp)
@@ -118,19 +140,20 @@ fun ScreenA(
 
                         Button(
                             onClick = {
-                                val age = ageText.toIntOrNull() ?: 0
-                                onRegister(name.trim(), breed.trim(), sizeText.trim(), age, photoUrl.trim())
+                                val edad = edadTxt.toIntOrNull() ?: 0
+                                onRegistrar(nombre, raza, tamaño, edad, sexo, urlFoto, indiceInicial)
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(50.dp),
                             shape = RoundedCornerShape(12.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFFF4081), // rosa vivo
-                                contentColor = Color.White
-                            )
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00796B))
                         ) {
-                            Text("Registrar")
+                            Text(
+                                if (indiceInicial < 0) "Registrar"
+                                else "Guardar cambios",
+                                color = Color.White
+                            )
                         }
                     }
                 }
